@@ -1,3 +1,4 @@
+// AI-assisted: see docs/AI_LOG.md #1
 // Call once per leg (pickup / destination), never on every location update.
 export async function getRoute(origin, destination) {
   const key = process.env.EXPO_PUBLIC_GOOGLE_MAPS_KEY;

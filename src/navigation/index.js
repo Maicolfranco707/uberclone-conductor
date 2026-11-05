@@ -1,3 +1,4 @@
+// AI-assisted: see docs/AI_LOG.md #1
 import React from 'react';
 import { ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';

@@ -1,3 +1,4 @@
+// AI-assisted: see docs/AI_LOG.md #1
 import React, { useState } from 'react';
 import { ScrollView, Text, Pressable, Image, Alert } from 'react-native';
 import { signOut } from 'firebase/auth';

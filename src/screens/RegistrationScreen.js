@@ -1,3 +1,4 @@
+// AI-assisted: see docs/AI_LOG.md #1
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { View, Text, ScrollView, Pressable, ActivityIndicator, Alert } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';

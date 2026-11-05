@@ -1,3 +1,4 @@
+// AI-assisted: see docs/AI_LOG.md #1
 import React, { createContext, useContext, useEffect, useReducer } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';

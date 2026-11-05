@@ -1,3 +1,4 @@
+// AI-assisted: see docs/AI_LOG.md #1
 import { useEffect, useState } from 'react';
 import * as Location from 'expo-location';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';

@@ -1,3 +1,4 @@
+// AI-assisted: see docs/AI_LOG.md #1
 import {
   doc, updateDoc, arrayUnion, increment, serverTimestamp, collection, query, where,
   orderBy, limit, startAfter, getDocs, Timestamp,
