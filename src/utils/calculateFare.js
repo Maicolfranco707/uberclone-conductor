@@ -1,3 +1,4 @@
+// AI-assisted: see docs/AI_LOG.md #1
 import { PRICING } from '../config/pricing';
 
 // Pure function used by the passenger estimate AND the driver trip closing.

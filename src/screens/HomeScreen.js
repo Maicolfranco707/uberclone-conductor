@@ -1,3 +1,4 @@
+// AI-assisted: see docs/AI_LOG.md #1
 import React, { useEffect, useState } from 'react';
 import { View, Text, Switch, Pressable } from 'react-native';
 import MapView from 'react-native-maps';

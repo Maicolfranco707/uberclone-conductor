@@ -1,3 +1,4 @@
+// AI-assisted: see docs/AI_LOG.md #1
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, FlatList, Pressable, ScrollView } from 'react-native';
 import { useSession } from '../context/SessionContext';

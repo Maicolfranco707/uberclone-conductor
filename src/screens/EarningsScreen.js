@@ -1,3 +1,4 @@
+// AI-assisted: see docs/AI_LOG.md #1
 import React from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { useSession } from '../context/SessionContext';

@@ -1,3 +1,4 @@
+// AI-assisted: see docs/AI_LOG.md #1
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { initializeAuth, getReactNativePersistence, getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';

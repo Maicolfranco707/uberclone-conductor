@@ -1,3 +1,4 @@
+// AI-assisted: see docs/AI_LOG.md #1
 import React, { useState } from 'react';
 import { View, Text, Pressable, Linking, ActivityIndicator } from 'react-native';
 import { useSession } from '../context/SessionContext';

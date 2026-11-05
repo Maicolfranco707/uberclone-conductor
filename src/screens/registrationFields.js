@@ -1,3 +1,4 @@
+// AI-assisted: see docs/AI_LOG.md #1
 import { PRICING } from '../config/pricing';
 import { validators as v } from '../utils/validators';
 

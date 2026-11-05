@@ -1,3 +1,4 @@
+// AI-assisted: see docs/AI_LOG.md #1
 export const startOfDay = (d = new Date()) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
 export const startOfWeek = (d = new Date()) => {
   const s = startOfDay(d);

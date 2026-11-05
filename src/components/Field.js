@@ -1,3 +1,4 @@
+// AI-assisted: see docs/AI_LOG.md #1
 import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, Image, Switch, Platform } from 'react-native';
 import { Picker } from '@react-native-picker/picker';

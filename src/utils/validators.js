@@ -1,3 +1,4 @@
+// AI-assisted: see docs/AI_LOG.md #1
 import { PRICING } from '../config/pricing';
 
 const empty = (v) => v === undefined || v === null || String(v).trim() === '';

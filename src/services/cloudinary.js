@@ -1,3 +1,4 @@
+// AI-assisted: see docs/AI_LOG.md #1
 // Unsigned upload (preset configured in Cloudinary). No API secret in the app.
 export async function uploadImage(uri) {
   const cloud = process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME;

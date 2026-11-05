@@ -1,3 +1,4 @@
+// AI-assisted: see docs/AI_LOG.md #1
 // Decodes a Google encoded polyline into [{latitude, longitude}]
 export function decodePolyline(str = '') {
   let i = 0, lat = 0, lng = 0;
