@@ -22,7 +22,20 @@
     },
     "plugins": [
       "@react-native-community/datetimepicker",
-      "expo-status-bar"
+      "expo-status-bar",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "UberClone Conductor usa tu ubicación para recibir solicitudes de viaje cercanas."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Necesitamos acceso a tu galería para adjuntar fotos y documentos.",
+          "cameraPermission": "Necesitamos la cámara para tomar tu foto, la del vehículo y tus documentos."
+        }
+      ]
     ]
   }
 }
