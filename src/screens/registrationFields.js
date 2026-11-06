@@ -9,7 +9,7 @@ export const personalFields = [
   { key: 'fullName', label: 'Nombre completo', autoCapitalize: 'words', validate: v.fullName },
   { key: 'idNumber', label: 'Documento de identidad', type: 'number', validate: v.idNumber },
   { key: 'phone', label: 'Número de celular', type: 'number', validate: v.phone },
-  { key: 'birthDate', label: 'Fecha de nacimiento', type: 'date', validate: v.birthDate },
+  { key: 'birthDate', label: 'Fecha de nacimiento', type: 'date', maxYearsAgo: 18, validate: v.birthDate },
   { key: 'gender', label: 'Género', type: 'select', options: ['Femenino', 'Masculino', 'Otro', 'Prefiero no decir'], validate: v.required },
   { key: 'email', label: 'Correo electrónico', keyboard: 'email-address', validate: v.email },
   { key: 'language', label: 'Idioma', type: 'select', options: [{ value: 'es', label: 'Español' }, { value: 'en', label: 'English' }], validate: v.required },
