@@ -1,4 +1,5 @@
 // AI-assisted: see docs/AI_LOG.md #1
+// AI-assisted: see docs/AI_LOG.md #1
 import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, Image, Switch, Platform } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
@@ -7,10 +8,12 @@ import * as ImagePicker from 'expo-image-picker';
 import { s, colors } from '../theme';
 import { toISODate } from '../utils/dates';
 
+const yearsAgo = (n) => { const d = new Date(); d.setFullYear(d.getFullYear() - n); return d; };
+
 export function DateField({ value, onChange, maximumDate, minimumDate }) {
   const [show, setShow] = useState(false);
   const [y, m, d] = (value || '').split('-').map(Number);
-  const current = value ? new Date(y, m - 1, d) : new Date();
+  const current = value ? new Date(y, m - 1, d) : (maximumDate || new Date());
   return (
     <>
       <Pressable style={s.input} onPress={() => setShow(true)}>
@@ -68,7 +71,11 @@ export default function Field({ def, value, error, onChange, onTouch }) {
         </View>
       )}
       {type === 'date' && (
-        <DateField value={value} onChange={(v) => { onChange(v); onTouch(); }} />
+        <DateField
+          value={value}
+          maximumDate={def.maxYearsAgo ? yearsAgo(def.maxYearsAgo) : undefined}
+          onChange={(v) => { onChange(v); onTouch(); }}
+        />
       )}
       {type === 'image' && (
         <Pressable
