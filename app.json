@@ -35,7 +35,8 @@
           "photosPermission": "Necesitamos acceso a tu galería para adjuntar fotos y documentos.",
           "cameraPermission": "Necesitamos la cámara para tomar tu foto, la del vehículo y tus documentos."
         }
-      ]
+      ],
+      "expo-font"
     ]
   }
 }
