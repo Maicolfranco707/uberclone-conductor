@@ -44,3 +44,4 @@ yarn-error.*
 backend/.env
 backend/serviceAccount.json
 backend/node_modules/
+repomix-output.xml
