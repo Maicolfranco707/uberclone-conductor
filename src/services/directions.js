@@ -1,10 +1,8 @@
-// AI-assisted: see docs/AI_LOG.md #1
-// Call once per leg (pickup / destination), never on every location update.
+// AI-assisted: see docs/AI_LOG.md #2
+// Free routing with OSRM (no API key). One call per leg, never on every location update.
 export async function getRoute(origin, destination) {
-  const key = process.env.EXPO_PUBLIC_GOOGLE_MAPS_KEY;
-  const url =
-    `https://maps.googleapis.com/maps/api/directions/json?origin=${origin.lat},${origin.lng}` +
-    `&destination=${destination.lat},${destination.lng}&key=${key}`;
+  const coords = `${origin.lng},${origin.lat};${destination.lng},${destination.lat}`;
+  const url = `https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=polyline`;
   const json = await (await fetch(url)).json();
-  return json.routes?.[0]?.overview_polyline?.points || '';
+  return json.routes?.[0]?.geometry || '';
 }
