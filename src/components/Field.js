@@ -7,6 +7,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { s, colors } from '../theme';
 import { toISODate } from '../utils/dates';
+import SelectField from './SelectField';
 
 const yearsAgo = (n) => { const d = new Date(); d.setFullYear(d.getFullYear() - n); return d; };
 
@@ -61,14 +62,7 @@ export default function Field({ def, value, error, onChange, onTouch }) {
       <Text style={s.label}>{label}</Text>
       {hint ? <Text style={s.muted}>{hint}</Text> : null}
       {type === 'select' && (
-        <View style={s.input}>
-          <Picker selectedValue={value ?? ''} onValueChange={(v) => { onChange(v); onTouch(); }}>
-            <Picker.Item label="Seleccionar..." value="" />
-            {options.map((o) => (
-              <Picker.Item key={o.value ?? o} label={o.label ?? o} value={o.value ?? o} />
-            ))}
-          </Picker>
-        </View>
+        <SelectField value={value} options={options} onChange={(v) => { onChange(v); onTouch(); }} />
       )}
       {type === 'date' && (
         <DateField
