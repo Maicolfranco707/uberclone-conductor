@@ -1,6 +1,6 @@
-// AI-assisted: see docs/AI_LOG.md #1
+// AI-assisted: see docs/AI_LOG.md #2
 import React, { useEffect, useState } from 'react';
-import { View, Text, Switch, Pressable } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import MapView from 'react-native-maps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { doc, updateDoc } from 'firebase/firestore';
@@ -8,10 +8,10 @@ import { db } from '../services/firebase';
 import { useSession } from '../context/SessionContext';
 import useDriverLocation from '../hooks/useDriverLocation';
 import useTripRequests from '../hooks/useTripRequests';
-import { s, colors } from '../theme';
+import { s, colors, fonts } from '../theme';
 
 export default function HomeScreen({ navigation }) {
-  const { driver, activeTrip, setActiveTripId } = useSession();
+  const { driver, activeTrip } = useSession();
   const [available, setAvailable] = useState(false);
   const approved = driver?.approvalStatus === 'approved';
   const { location } = useDriverLocation(driver?.id, available);
@@ -24,13 +24,13 @@ export default function HomeScreen({ navigation }) {
     if (request) navigation.navigate('IncomingRequest', { trip: request });
   }, [request, navigation]);
 
-  const toggle = async (value) => {
+  const toggle = async () => {
     if (!approved) return;
-    setAvailable(value);
-    await updateDoc(doc(db, 'drivers', driver.id), { isAvailable: value });
+    const next = !available;
+    setAvailable(next);
+    await updateDoc(doc(db, 'drivers', driver.id), { isAvailable: next });
   };
 
-  // Leaving the screen with the switch on is fine (tracking continues), but unmounting stops it via hook cleanup.
   const hasActiveTrip = activeTrip && !['paid', 'cancelled', 'rejected'].includes(activeTrip.status);
 
   return (
@@ -40,17 +40,51 @@ export default function HomeScreen({ navigation }) {
         showsUserLocation
         region={location ? { latitude: location.lat, longitude: location.lng, latitudeDelta: 0.02, longitudeDelta: 0.02 } : undefined}
       />
-      <View style={{ position: 'absolute', top: 50, left: 16, right: 16, backgroundColor: '#fff', borderRadius: 12, padding: 14 }}>
-        {!approved && <Text style={[s.error, { marginBottom: 8 }]}>Tu cuenta está pendiente de aprobación.</Text>}
-        <View style={[s.row, { alignItems: 'center' }]}>
-          <Text style={{ fontWeight: '700' }}>{available ? 'Disponible' : 'No disponible'}</Text>
-          <Switch value={available} disabled={!approved} onValueChange={toggle} trackColor={{ true: colors.accent }} />
-        </View>
+
+      <View style={{ position: 'absolute', left: 20, right: 20, bottom: 34 }}>
+        {!approved && (
+          <View style={[s.card, { marginBottom: 10, paddingVertical: 12 }]}>
+            <Text style={{ fontFamily: fonts.semibold, color: colors.danger }}>Cuenta pendiente de aprobación</Text>
+            <Text style={[s.muted, { marginTop: 2, fontSize: 13 }]}>Podrás ponerte disponible cuando la aprueben.</Text>
+          </View>
+        )}
+
         {hasActiveTrip && (
-          <Pressable style={s.btn} onPress={() => navigation.navigate(activeTrip.status === 'completed' ? 'PaymentSummary' : 'TripInProgress')}>
+          <Pressable
+            style={[s.btn, { marginTop: 0, marginBottom: 10 }]}
+            onPress={() => navigation.navigate(activeTrip.status === 'completed' ? 'PaymentSummary' : 'TripInProgress')}
+          >
             <Text style={s.btnText}>Volver al viaje</Text>
           </Pressable>
         )}
+
+        {/* The "taxi lamp": glows amber when the driver is online */}
+        <Pressable
+          onPress={toggle}
+          disabled={!approved}
+          style={{
+            height: 64,
+            borderRadius: 32,
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: available ? colors.accent : colors.surface,
+            borderWidth: available ? 0 : 1,
+            borderColor: colors.border,
+            opacity: approved ? 1 : 0.5,
+            shadowColor: colors.accent,
+            shadowOpacity: available ? 0.75 : 0,
+            shadowRadius: 22,
+            shadowOffset: { width: 0, height: 0 },
+            elevation: available ? 12 : 3,
+          }}
+        >
+          <Text style={{ fontFamily: fonts.bold, fontSize: 18, letterSpacing: -0.3, color: available ? colors.text : colors.muted }}>
+            {available ? 'Disponible' : 'No disponible'}
+          </Text>
+          <Text style={{ fontFamily: fonts.regular, fontSize: 12, color: available ? colors.text : colors.muted }}>
+            {available ? 'Toca para desconectarte' : 'Toca para recibir viajes'}
+          </Text>
+        </Pressable>
       </View>
     </View>
   );
