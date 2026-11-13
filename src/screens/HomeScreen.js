@@ -1,10 +1,11 @@
-// AI-assisted: see docs/AI_LOG.md #2
+// AI-assisted: see docs/AI_LOG.md #2, #4
 import React, { useEffect, useState } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, AppState } from 'react-native';
 import MapView from 'react-native-maps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../services/firebase';
+import { askNotificationPermission, notifyNewRequest } from '../services/notifications';
 import { useSession } from '../context/SessionContext';
 import useDriverLocation from '../hooks/useDriverLocation';
 import useTripRequests from '../hooks/useTripRequests';
@@ -20,20 +21,25 @@ export default function HomeScreen({ navigation }) {
   // Preference only (no sensitive data): remember last availability choice
   useEffect(() => { AsyncStorage.setItem('lastAvailability', String(available)); }, [available]);
 
-    // On app start the pill is off, so Firestore must say the same
+  // On app start the pill is off, so Firestore must say the same
   useEffect(() => {
     if (driver?.id && driver.isAvailable) {
       updateDoc(doc(db, 'drivers', driver.id), { isAvailable: false });
     }
   }, [driver?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // New request: notify if the app is in the background, and open the request screen
   useEffect(() => {
-    if (request) navigation.navigate('IncomingRequest', { trip: request });
+    if (request) {
+      if (AppState.currentState !== 'active') notifyNewRequest(request);
+      navigation.navigate('IncomingRequest', { trip: request });
+    }
   }, [request, navigation]);
 
   const toggle = async () => {
     if (!approved) return;
     const next = !available;
+    if (next) askNotificationPermission();
     setAvailable(next);
     await updateDoc(doc(db, 'drivers', driver.id), { isAvailable: next });
   };
