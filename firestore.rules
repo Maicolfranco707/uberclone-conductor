@@ -1,0 +1,31 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+
+    // Each driver reads and writes only their own profile.
+    match /drivers/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.approvalStatus == 'pending'
+        && request.resource.data.balance == 0;
+      // A driver can never change their own approval status.
+      allow update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.approvalStatus == resource.data.approvalStatus;
+      allow delete: if false;
+    }
+
+    // A driver sees and updates only the trips offered to them or assigned to them.
+    match /trips/{tripId} {
+      allow read: if signedIn()
+        && (resource.data.offeredTo == request.auth.uid || resource.data.driverId == request.auth.uid);
+      // Simulates the passenger app (it does not exist yet): anyone can request a trip.
+      allow create: if request.resource.data.status == 'requested'
+        && request.resource.data.driverId == null;
+      allow update: if signedIn()
+        && (resource.data.offeredTo == request.auth.uid || resource.data.driverId == request.auth.uid);
+      allow delete: if false;
+    }
+  }
+}
