@@ -6,6 +6,7 @@ import { acceptTrip, rejectTrip } from '../services/trips';
 import { calculateFare, formatCOP } from '../utils/calculateFare';
 import { PRICING } from '../config/pricing';
 import { s } from '../theme';
+import { categoryLabel, paymentMethodLabel } from '../utils/labels';
 
 export default function IncomingRequestScreen({ route, navigation }) {
   const { trip } = route.params;
@@ -41,8 +42,8 @@ export default function IncomingRequestScreen({ route, navigation }) {
         <Row k="Destino" v={trip.destination?.address} />
         <Row k="Distancia" v={`${trip.distanceKm} km`} />
         <Row k="Duración" v={`${trip.durationMin} min`} />
-        <Row k="Categoría" v={trip.category} />
-        <Row k="Pago" v={trip.paymentMethod} />
+        <Row k="Categoría" v={categoryLabel(trip.category)} />
+        <Row k="Pago" v={paymentMethodLabel(trip.paymentMethod)} />
         <Row k="Tarifa estimada" v={formatCOP(est.fare)} />
         <Row k="Ganancia neta estimada" v={formatCOP(est.driverEarnings)} />
       </View>
