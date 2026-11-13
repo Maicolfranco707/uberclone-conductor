@@ -20,6 +20,13 @@ export default function HomeScreen({ navigation }) {
   // Preference only (no sensitive data): remember last availability choice
   useEffect(() => { AsyncStorage.setItem('lastAvailability', String(available)); }, [available]);
 
+    // On app start the pill is off, so Firestore must say the same
+  useEffect(() => {
+    if (driver?.id && driver.isAvailable) {
+      updateDoc(doc(db, 'drivers', driver.id), { isAvailable: false });
+    }
+  }, [driver?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     if (request) navigation.navigate('IncomingRequest', { trip: request });
   }, [request, navigation]);
