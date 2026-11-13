@@ -6,6 +6,7 @@ import { DateField } from '../components/Field';
 import { formatCOP } from '../utils/calculateFare';
 import { startOfDay, startOfWeek, startOfMonth } from '../utils/dates';
 import { s } from '../theme';
+import { categoryLabel, paymentMethodLabel } from '../utils/labels';
 
 const PERIODS = [['today', 'Hoy'], ['week', 'Semana'], ['month', 'Mes'], ['range', 'Rango']];
 const METHODS = [['all', 'Todos'], ['mercadopago', 'Mercado Pago'], ['stripe', 'Stripe'], ['cash', 'Efectivo']];
@@ -103,10 +104,10 @@ export default function HistoryScreen({ navigation }) {
             <Text style={s.muted}>{new Date(t.completedAt).toLocaleString()}</Text>
             <Text numberOfLines={1}>{t.origin?.address} → {t.destination?.address}</Text>
             <View style={s.row}>
-              <Text>{t.category} · {formatCOP(t.fare)}</Text>
+              <Text>{categoryLabel(t.category)} · {formatCOP(t.fare)}</Text>
               <Text style={{ fontWeight: '700' }}>{formatCOP(t.driverEarnings)}</Text>
             </View>
-            <Text style={s.muted}>Pago: {t.paymentStatus}</Text>
+            <Text style={s.muted}>Pago: {paymentMethodLabel(t.paymentMethod)}</Text>
           </Pressable>
         )}
       />
