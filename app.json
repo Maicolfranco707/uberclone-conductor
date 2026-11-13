@@ -36,7 +36,10 @@
           "cameraPermission": "Necesitamos la cámara para tomar tu foto, la del vehículo y tus documentos."
         }
       ],
-      "expo-font"
+      "expo-font",
+      "@react-native-firebase/app",
+      "@react-native-firebase/messaging",
+      "expo-build-properties"
     ]
   }
 }
