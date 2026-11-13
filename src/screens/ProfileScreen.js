@@ -1,40 +1,71 @@
-// AI-assisted: see docs/AI_LOG.md #1
+// AI-assisted: see docs/AI_LOG.md #2
 import React, { useState } from 'react';
-import { ScrollView, Text, Pressable, Image, Alert } from 'react-native';
+import { ScrollView, View, Text, Pressable, Image } from 'react-native';
 import { signOut } from 'firebase/auth';
-import { doc, updateDoc } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { auth, db } from '../services/firebase';
+import { auth } from '../services/firebase';
 import { useSession } from '../context/SessionContext';
-import Field from '../components/Field';
+import EditSection from '../components/EditSection';
+import { vehicleFields, documentFields } from './registrationFields';
 import { validators as v } from '../utils/validators';
-import { s } from '../theme';
+import { s, colors, fonts } from '../theme';
+
+const contactFields = [
+  { key: 'phone', label: 'Celular', type: 'number', validate: v.phone },
+  { key: 'mpEmail', label: 'Correo de Mercado Pago', keyboard: 'email-address', validate: v.email },
+  {
+    key: 'language', label: 'Idioma', type: 'select',
+    options: [{ value: 'es', label: 'Español' }, { value: 'en', label: 'English' }],
+    validate: v.required,
+  },
+];
+// Terms and the payment email are not part of the documents section
+const docFields = documentFields.filter((f) => f.key !== 'acceptTerms' && f.key !== 'mpEmail');
+
+const SECTIONS = [
+  ['contact', 'Datos', contactFields],
+  ['vehicle', 'Vehículo', vehicleFields],
+  ['docs', 'Documentos', docFields],
+];
+const STATUS = { pending: 'Pendiente de aprobación', approved: 'Aprobado' };
 
 export default function ProfileScreen() {
   const { driver } = useSession();
-  const [phone, setPhone] = useState(driver?.phone || '');
-  const [mpEmail, setMpEmail] = useState(driver?.mpEmail || '');
-  const [language, setLanguage] = useState(driver?.language || 'es');
-  const errors = { phone: v.phone(phone), mpEmail: v.email(mpEmail) };
-  const valid = !errors.phone && !errors.mpEmail;
+  const [section, setSection] = useState('contact');
+  if (!driver) return null;
+  const current = SECTIONS.find(([k]) => k === section);
 
-  const save = async () => {
-    await updateDoc(doc(db, 'drivers', driver.id), { phone, mpEmail, language });
-    await AsyncStorage.setItem('language', language); // preference only
-    Alert.alert('Listo', 'Perfil actualizado');
+  // Preference only (no sensitive data): remember the chosen language
+  const onSaved = (update) => {
+    if (update.language) AsyncStorage.setItem('language', update.language);
   };
 
   return (
-    <ScrollView style={s.screen}>
-      {driver?.photo && <Image source={{ uri: driver.photo }} style={{ width: 90, height: 90, borderRadius: 45 }} />}
-      <Text style={s.title}>{driver?.fullName}</Text>
-      <Text style={s.muted}>{driver?.brand} {driver?.model} · {driver?.plate} · {driver?.category}</Text>
-      <Text style={s.muted}>Estado: {driver?.approvalStatus}</Text>
-      <Field def={{ label: 'Celular', type: 'number' }} value={phone} error={errors.phone} onChange={setPhone} onTouch={() => {}} />
-      <Field def={{ label: 'Correo de Mercado Pago', keyboard: 'email-address' }} value={mpEmail} error={errors.mpEmail} onChange={setMpEmail} onTouch={() => {}} />
-      <Field def={{ label: 'Idioma', type: 'select', options: [{ value: 'es', label: 'Español' }, { value: 'en', label: 'English' }] }} value={language} onChange={setLanguage} onTouch={() => {}} />
-      <Pressable style={[s.btn, !valid && s.btnOff]} disabled={!valid} onPress={save}><Text style={s.btnText}>Guardar cambios</Text></Pressable>
-      <Pressable style={[s.btn, { backgroundColor: '#d92d20' }]} onPress={() => signOut(auth)}><Text style={s.btnText}>Cerrar sesión</Text></Pressable>
+    <ScrollView style={s.screen} contentContainerStyle={{ paddingBottom: 40 }} keyboardShouldPersistTaps="handled">
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+        {driver.photo ? (
+          <Image source={{ uri: driver.photo }} style={{ width: 64, height: 64, borderRadius: 32, marginRight: 14 }} />
+        ) : null}
+        <View style={{ flex: 1 }}>
+          <Text style={{ fontFamily: fonts.bold, fontSize: 20, color: colors.text }}>{driver.fullName}</Text>
+          <Text style={s.muted}>{driver.brand} {driver.model} · {driver.plate}</Text>
+          <Text style={s.muted}>{STATUS[driver.approvalStatus] || driver.approvalStatus}</Text>
+        </View>
+      </View>
+
+      <View style={{ flexDirection: 'row' }}>
+        {SECTIONS.map(([k, label]) => (
+          <Pressable key={k} style={[s.chip, section === k && s.chipOn]} onPress={() => setSection(k)}>
+            <Text style={{ color: section === k ? '#fff' : colors.text }}>{label}</Text>
+          </Pressable>
+        ))}
+      </View>
+
+      <EditSection key={section} driver={driver} fields={current[2]} onSaved={onSaved} />
+
+      <Pressable style={[s.btn, { backgroundColor: colors.danger }]} onPress={() => signOut(auth)}>
+        <Text style={s.btnText}>Cerrar sesión</Text>
+      </Pressable>
     </ScrollView>
   );
 }
