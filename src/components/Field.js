@@ -2,7 +2,6 @@
 // AI-assisted: see docs/AI_LOG.md #1
 import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, Image, Switch, Platform } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { s, colors } from '../theme';
