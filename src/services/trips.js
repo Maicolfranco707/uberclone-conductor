@@ -11,9 +11,13 @@ const tripRef = (id) => doc(db, 'trips', id);
 export const acceptTrip = (tripId, driverId) =>
   updateDoc(tripRef(tripId), { status: 'accepted', driverId, offeredTo: null, acceptedAt: serverTimestamp() });
 
-// Reject / timeout: the request goes back to the pool for the next driver.
+// Reject / timeout: the trip is marked as rejected (there is no dispatcher yet to offer it to the next driver).
 export const rejectTrip = (tripId, driverId) =>
-  updateDoc(tripRef(tripId), { offeredTo: null, rejectedBy: arrayUnion(driverId) });
+  updateDoc(tripRef(tripId), {
+    status: 'rejected',
+    offeredTo: null,
+    rejectedBy: arrayUnion(driverId),
+  });
 
 export const setTripStatus = (tripId, status, extra = {}) =>
   updateDoc(tripRef(tripId), { status, ...extra });
