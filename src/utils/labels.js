@@ -5,7 +5,7 @@ export const PAYMENT_STATUS_LABEL = {
   approved: 'Aprobado',
   pending: 'Pendiente',
   rejected: 'Rechazado',
-  cash: 'Efectivo',
+  cash: 'Recibido',
   cash_pending: 'Pendiente',
 };
 
